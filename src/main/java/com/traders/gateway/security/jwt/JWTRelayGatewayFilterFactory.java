@@ -24,8 +24,9 @@ public class JWTRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<O
     @Override
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
-            String bearerToken = exchange.getRequest().getHeaders().getFirst(PROXY_AUTHORIZATION);
+            String bearerToken = exchange.getRequest().getHeaders().getFirst("JwtToken");
             System.out.println("Authorization header: " + bearerToken);
+            //exchange.getRequest().getHeaders().entrySet().stream().forEach(System.out::println);
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
                 String token = this.extractToken(bearerToken);
                 return jwtConfiguration.getReactiveJwtDecoderInstance().decode(token)
