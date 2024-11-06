@@ -1,0 +1,13 @@
+runtime: java21
+instance_class: F2
+service: gateway
+env: standard
+
+#entrypoint: java -jar build/libs/gatewayapp-0.0.1-SNAPSHOT.jar  # Adjust this if necessary
+
+env_variables:
+  SPRING_PROFILES_ACTIVE: dev
+
+handlers:
+  - url: /.*
+    script: auto

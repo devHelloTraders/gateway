@@ -1,0 +1,16 @@
+plugins {
+    id 'groovy-gradle-plugin'
+}
+
+repositories {
+    gradlePluginPortal()
+}
+
+dependencies {
+    implementation libs.jib.plugin
+    implementation libs.modernizer.plugin
+    implementation libs.nohttp.plugin
+    implementation libs.sonarqube.plugin
+    implementation libs.spotless.plugin
+    implementation libs.node.gradle
+}

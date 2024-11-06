@@ -1,0 +1,52 @@
+# ===================================================================
+# Spring Cloud Consul Config bootstrap configuration for the "dev" profile
+# In prod profile, properties will be overwritten by the ones defined in bootstrap-prod.yml
+# ===================================================================
+
+spring:
+  application:
+    name: gatewayapp
+  profiles:
+    # The commented value for `active` can be replaced with valid Spring profiles to load.
+    # Otherwise, it will be filled in by gradle when building the JAR file
+    # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
+    active: '@spring.profiles.active@'
+  cloud:
+    consul:
+      enabled: true
+      config:
+        enabled: false
+        fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config
+        format: yaml
+        profile-separator: '-'
+      discovery:
+        enabled: true
+        #hostname: localhost
+#        healthCheckPath: ${server.servlet.context-path}/management/health
+#        healthCheckInterval: 15s
+        register-health-check: false
+#        health-check-path: /management/health
+#        health-check-interval: 10s
+#        health-check:
+#          enabled: false
+#          interval: 10s
+#          timeout: 10s
+#          http:
+#            method: GET
+#            path: /management/health
+        tags:
+          - profile=${spring.profiles.active}
+          - version='@project.version@'
+          - git-version=${git.commit.id.describe:}
+          - git-commit=${git.commit.id.abbrev:}
+          - git-branch=${git.branch:}
+          - context-path=${server.servlet.context-path:}
+
+      host: consul-585407576955.us-central1.run.app
+      scheme: https
+      port: 443
+#  docker:
+#    compose:
+#      enabled: false
+#      lifecycle-management: start-only
+#      file: src/main/docker/services.yml

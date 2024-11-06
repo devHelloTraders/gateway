@@ -1,0 +1,10 @@
+
+pluginManagement {
+    repositories {
+    }
+    plugins {
+        id 'com.gorylenko.gradle-git-properties' version "${gitPropertiesPluginVersion}"
+    }
+}
+
+rootProject.name = "gatewayapp"

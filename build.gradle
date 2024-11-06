@@ -1,0 +1,233 @@
+buildscript {      // Configuration for building
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.5.0'
+  }
+}
+plugins {
+    id "java"
+    id "maven-publish"
+    id "idea"
+    id "eclipse"
+  //id 'com.google.cloud.tools.appengine' version '2.4.4'
+    id "com.gorylenko.gradle-git-properties"
+    alias(libs.plugins.spring.boot)
+}
+
+group = "com.traders.gateway"
+version = "0.0.1-SNAPSHOT"
+
+description = ""
+
+
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(23)
+  }
+}
+assert System.properties["java.specification.version"] == "17" || "21" || "22"
+
+ext {
+    springProfiles = ""
+    if (project.hasProperty("tls")) {
+        springProfiles += ",tls"
+    }
+    if (project.hasProperty("e2e")) {
+        springProfiles += ",e2e"
+    }
+}
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.google.cloud.tools.appengine'
+
+if (project.hasProperty("prod")) {
+    apply from: "gradle/profile_prod.gradle"
+} else {
+    apply from: "gradle/profile_dev.gradle"
+}
+
+if (project.hasProperty("war")) {
+    apply from: "gradle/war.gradle"
+}
+
+if (project.hasProperty("zipkin")) {
+    apply from: "gradle/zipkin.gradle"
+}
+
+idea {
+    module {
+        excludeDirs += files("node_modules")
+    }
+}
+
+eclipse {
+    sourceSets {
+        main {
+            java {
+                srcDirs += ["build/generated/sources/annotationProcessor/java/main"]
+            }
+        }
+    }
+}
+
+defaultTasks "bootRun"
+
+springBoot {
+    mainClass = "com.traders.gateway.GatewayappApp"
+}
+
+
+
+
+
+gitProperties {
+    failOnNoGitDirectory = false
+    keys = ["git.branch", "git.commit.id.abbrev", "git.commit.id.describe"]
+}
+
+tasks.withType(com.gorylenko.GenerateGitPropertiesTask).configureEach {
+  outputs.doNotCacheIf("Task is always executed") { true }
+}
+
+configurations {
+    providedRuntime
+    implementation.exclude module: "spring-boot-starter-tomcat"
+}
+
+dependencies {
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+
+    implementation "io.micrometer:micrometer-registry-prometheus-simpleclient"
+    runtimeOnly "io.netty:netty-tcnative-boringssl-static"
+    implementation "jakarta.annotation:jakarta.annotation-api"
+    implementation "org.apache.commons:commons-lang3"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "org.springframework.boot:spring-boot-loader-tools"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-mail"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.cloud:spring-cloud-starter"
+    implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
+    implementation "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j"
+    implementation "org.springframework.cloud:spring-cloud-starter-consul-config"
+    implementation "org.springframework.cloud:spring-cloud-starter-consul-discovery"
+    implementation "org.springframework.data:spring-data-commons"
+    implementation 'com.traders.hello:commonService:0.0.1-SNAPSHOT'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+    implementation "org.springframework.retry:spring-retry"
+    testImplementation "org.springframework.security:spring-security-test"
+    implementation platform(libs.spring.cloud.dependencies)
+    implementation platform(libs.feign.reactor.bom)
+    implementation libs.springdoc.openapi.starter.webflux.api
+
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
+    implementation "org.springframework.cloud:spring-cloud-starter-gateway"
+  implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+
+  //developmentOnly "org.springframework.boot:spring-boot-docker-compose"
+    OperatingSystem os = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem();
+    Architecture arch = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentArchitecture();
+    if (os.isMacOsX() && !arch.isAmd64()) {
+        implementation("io.netty:netty-resolver-dns-native-macos") {
+            artifact {
+                classifier = "osx-aarch_64"
+            }
+        }
+    }
+}
+dependencies {
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+  implementation "io.micrometer:micrometer-registry-prometheus-simpleclient"
+  runtimeOnly "io.netty:netty-tcnative-boringssl-static"
+  implementation "jakarta.annotation:jakarta.annotation-api"
+  implementation "org.apache.commons:commons-lang3"
+  annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+  implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+  implementation "org.springframework.boot:spring-boot-starter-actuator"
+  implementation "org.springframework.boot:spring-boot-starter-aop"
+  implementation "org.springframework.boot:spring-boot-starter-logging"
+  implementation "org.springframework.boot:spring-boot-starter-mail"
+  implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+  implementation "org.springframework.boot:spring-boot-starter-security"
+  implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+  implementation "org.springframework.boot:spring-boot-starter-validation"
+  implementation "org.springframework.cloud:spring-cloud-starter"
+  implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
+  implementation "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j"
+  implementation "org.springframework.data:spring-data-commons"
+  implementation 'com.traders.hello:commonService:0.0.1-SNAPSHOT'
+  implementation platform(libs.spring.cloud.dependencies)
+  implementation platform(libs.feign.reactor.bom)
+  implementation libs.springdoc.openapi.starter.webflux.api
+  implementation "org.springframework.boot:spring-boot-starter-webflux"
+  implementation "org.springframework.cloud:spring-cloud-starter-gateway"
+  testImplementation "org.springframework.security:spring-security-test"
+  implementation 'com.google.cloud.tools:appengine-gradle-plugin:2.8.1'
+//  providedCompile 'com.google.appengine:appengine:+'
+
+
+  // Optional: Conditional dependency for Mac with non-AMD64 architecture
+  OperatingSystem os = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem();
+  Architecture arch = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentArchitecture();
+  if (os.isMacOsX() && !arch.isAmd64()) {
+    implementation("io.netty:netty-resolver-dns-native-macos") {
+      artifact {
+        classifier = "osx-aarch_64"
+      }
+    }
+  }
+}
+
+task cleanResources(type: Delete) {
+    delete "build/resources"
+}
+
+task deployAppEngine(type: Exec) {
+  group = 'deployment'
+  description = 'Deploys the application to Google App Engine'
+
+  // Command to deploy to App Engine
+}
+
+appengine {
+
+  deploy {
+    projectId = "true-oasis-439517-g0"
+    version = "001-snapshot"
+    stopPreviousVersion = true  // default - stop the current version
+    promote = true              // default - & make this the current version
+  }
+}
+jar {
+  manifest {
+    attributes(
+      'Main-Class': 'com.traders.gateway.GatewayappApp'
+    )
+  }
+}
+compileJava.dependsOn processResources
+processResources.dependsOn bootBuildInfo

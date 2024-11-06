@@ -1,0 +1,11 @@
+[versions]
+jacoco = "0.8.12"
+checkstyle = "10.18.1"
+
+[libraries]
+spring-cloud-dependencies = { module = "org.springframework.cloud:spring-cloud-dependencies", version = "2023.0.3" }
+springdoc-openapi-starter-webflux-api = { module = "org.springdoc:springdoc-openapi-starter-webflux-api", version = "2.6.0" }
+feign-reactor-bom = { module = "com.playtika.reactivefeign:feign-reactor-bom", version = "4.2.1" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version = "3.3.4" }
