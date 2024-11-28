@@ -1,5 +1,6 @@
 package com.traders.gateway.security.jwt;
 
+import com.traders.common.utils.EncryptionUtil;
 import com.traders.gateway.config.SecurityJwtConfiguration;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -25,13 +26,11 @@ public class JWTRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<O
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             String bearerToken = exchange.getRequest().getHeaders().getFirst("JwtToken");
-            System.out.println("Authorization header: " + bearerToken);
-            //exchange.getRequest().getHeaders().entrySet().stream().forEach(System.out::println);
+            //System.out.println("Authorization header: " + bearerToken);
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
                 String token = this.extractToken(bearerToken);
                 return jwtConfiguration.getReactiveJwtDecoderInstance().decode(token)
-                    .thenReturn(withBearerAuth(exchange, token))
-                    .flatMap(chain::filter);
+                    .flatMap(jwt -> chain.filter(withBearerAuth(exchange, token, jwt.getClaimAsString("userId"))));
             }
 
             return chain.filter(exchange); // Proceed without the token if it's not present
@@ -45,7 +44,10 @@ public class JWTRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<O
         throw new IllegalArgumentException("Invalid token in Authorization header");
     }
 
-    private ServerWebExchange withBearerAuth(ServerWebExchange exchange, String authorizeToken) {
-        return exchange.mutate().request(r -> r.headers(headers -> headers.setBearerAuth(authorizeToken))).build();
+    private ServerWebExchange withBearerAuth(ServerWebExchange exchange, String authorizeToken,String userId) {
+        return exchange.mutate().request(r -> r.headers(headers ->{
+            headers.setBearerAuth(authorizeToken);
+            headers.set("X-User-Id", userId);
+        })).build();
     }
 }
