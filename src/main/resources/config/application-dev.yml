@@ -68,9 +68,9 @@ spring:
           - git-version=${git.commit.id.describe:}
           - git-commit=${git.commit.id.abbrev:}
           - git-branch=${git.branch:}
-      host: consul-585407576955.us-central1.run.app
-      port: 443
-      scheme: https
+      host: localhost
+      port: 8500
+      scheme: http
   loadbalancer:
     ribbon:
       enabled: false

@@ -1,16 +1,11 @@
 package com.traders.gateway.security.jwt;
 
-import com.traders.common.utils.EncryptionUtil;
 import com.traders.gateway.config.SecurityJwtConfiguration;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
-
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpHeaders.PROXY_AUTHORIZATION;
 
 @Component
 public class JWTRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<Object> {
@@ -25,8 +20,7 @@ public class JWTRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<O
     @Override
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
-            String bearerToken = exchange.getRequest().getHeaders().getFirst("JwtToken");
-            //System.out.println("Authorization header: " + bearerToken);
+            String bearerToken = exchange.getRequest().getHeaders().getFirst("Authorization");
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
                 String token = this.extractToken(bearerToken);
                 return jwtConfiguration.getReactiveJwtDecoderInstance().decode(token)

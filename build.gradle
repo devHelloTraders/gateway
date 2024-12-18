@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "com.traders.gateway"
-version = "0.0.1-final"
+version = "0.0.2-final"
 
 description = ""
 

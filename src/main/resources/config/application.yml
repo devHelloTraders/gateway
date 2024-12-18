@@ -119,8 +119,8 @@ spring:
     name: gatewayapp
   cloud:
     consul:
-      host: consul-585407576955.us-central1.run.app  # Remove https://
-      port: 443  #
+      host: localhost  # Remove https://
+      port: 8500  #
       discovery:
         enabled: true
         #healthCheckPath: /management/health

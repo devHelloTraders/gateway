@@ -9,12 +9,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter;
 import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.Mode;
@@ -30,9 +33,11 @@ import static org.springframework.security.web.server.util.matcher.ServerWebExch
 public class SecurityConfiguration {
 
     private final ConfigProperties configProperties;
+    private final SecurityJwtConfiguration jwtConfiguration;
 
-    public SecurityConfiguration(ConfigProperties configProperties) {
+    public SecurityConfiguration(ConfigProperties configProperties, SecurityJwtConfiguration jwtConfiguration) {
         this.configProperties = configProperties;
+        this.jwtConfiguration = jwtConfiguration;
     }
 
     @Bean
@@ -79,10 +84,10 @@ public class SecurityConfiguration {
                 authz
                     .pathMatchers("/").permitAll()
                     .pathMatchers("/*.*").permitAll()
-                    .pathMatchers("/api/authenticate").permitAll()
                     .pathMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
                     .pathMatchers("/api/auth/**").permitAll()
-                    .pathMatchers("/api/portfolio/**").permitAll()
+                    .pathMatchers("/api/auth/secure/**").authenticated()
+                    .pathMatchers("/api/portfolio/**").authenticated()
                     // microfrontend resources are loaded by webpack without authentication, they need to be public
                     .pathMatchers("/services/*/*.js").permitAll()
                     .pathMatchers("/services/*/*.txt").permitAll()
@@ -101,7 +106,9 @@ public class SecurityConfiguration {
                     .pathMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
             )
             .httpBasic(basic -> basic.disable())
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt.jwtDecoder(jwtConfiguration.getReactiveJwtDecoderInstance())) // Use the custom JwtDecoder
+            );
         return http.build();
     }
 }
