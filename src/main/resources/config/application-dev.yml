@@ -13,9 +13,9 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    org.hibernate.SQL: DEBUG
-    com.traders.gateway: DEBUG
+    ROOT: Info
+    org.hibernate.SQL: Info
+    com.traders.gateway: Info
     org.springframework.cloud.gateway: error
     org.springframework.cloud.loadbalancer: error
 

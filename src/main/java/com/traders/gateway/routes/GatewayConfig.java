@@ -139,7 +139,7 @@ public class GatewayConfig {
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/exchange/renew", "/api/renewSession")
+                    .rewritePath("/api/exchange/renew", "/api/admin/renewsession")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://exchangeService")
@@ -150,7 +150,7 @@ public class GatewayConfig {
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/exchange/start", "/api/startwebsocket")
+                    .rewritePath("/api/exchange/start", "/api/admin/startwebsocket")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://exchangeService")
@@ -161,7 +161,7 @@ public class GatewayConfig {
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/exchange/stop", "/api/stopwebsocket")
+                    .rewritePath("/api/exchange/stop", "/api/admin/stopwebsocket")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://exchangeService")
