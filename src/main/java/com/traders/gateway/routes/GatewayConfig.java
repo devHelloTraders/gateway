@@ -48,6 +48,20 @@ public class GatewayConfig {
                 )
                 .uri("lb://portfolioservice")
             )
+
+            .route("portfolioservice", r -> r
+                .path("/api/admin/portfolio")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/portfolio", "/api/admin/portfolioForUser")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+
+
+
 ///////////////////////////////////////////
             .route("portfolioservice", r -> r
                 .path("/api/portfolio/transactions")
@@ -66,7 +80,7 @@ public class GatewayConfig {
             .and()
             .method("GET")
             .filters(f -> f
-                .rewritePath("/api/portfolio/admin/transactions", "/api/transactionsForUser")
+                .rewritePath("/api/portfolio/admin/transactions", "/api/admin/transactionsForUser")
                 .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
             )
             .uri("lb://portfolioservice")
@@ -77,6 +91,18 @@ public class GatewayConfig {
                 .method("POST")
                 .filters(f -> f
                     .rewritePath("/api/portfolio/transactions/add", "/api/transactions/add")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+
+
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/transactions/update")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/update", "/api/transactions/update")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://portfolioservice")
@@ -98,7 +124,7 @@ public class GatewayConfig {
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/portfolio/admin/watchlist", "/api/watchlistForUser")
+                    .rewritePath("/api/portfolio/admin/watchlist", "/api/admin/watchlistForUser")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://portfolioservice")
@@ -189,6 +215,16 @@ public class GatewayConfig {
                 .uri("lb://exchangeService")
             )
 
+            .route("exchangeService", r -> r
+                .path("/api/exchange/machine/subscribe")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/exchange/machine/subscribe", "/api/machine/subscribe")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
             .build();
     }
 }
