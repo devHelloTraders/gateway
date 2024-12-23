@@ -61,7 +61,8 @@ spring:
           #http:
            # method: GET
            # path:
-        #prefer-ip-address: true
+        prefer-ip-address: true
+        scheme: http
         tags:
           - profile=${spring.profiles.active}
           - version='@project.version@'

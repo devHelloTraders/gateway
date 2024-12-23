@@ -225,6 +225,28 @@ public class GatewayConfig {
                 )
                 .uri("lb://exchangeService")
             )
+
+            .route("exchangeService", r -> r
+                .path("/api/exchange/machine/map")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/exchange/machine/map", "/api/machine/map")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
+            .route("exchangeService", r -> r
+                .path("/api/exchange/machine/quotes")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/exchange/machine/quotes", "/api/machine/quotes")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
             .build();
     }
 }
