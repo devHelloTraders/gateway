@@ -50,6 +50,19 @@ public class GatewayConfig {
             )
 
             .route("portfolioservice", r -> r
+                .path("/api/portfolio/gethistory")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/gethistory", "/api/portfolio/history")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+
+
+
+            .route("portfolioservice", r -> r
                 .path("/api/admin/portfolio")
                 .and()
                 .method("GET")
@@ -244,6 +257,30 @@ public class GatewayConfig {
                 .filters(f -> f
                     .rewritePath("/api/exchange/machine/quotes", "/api/machine/quotes")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
+            //////////////////////////////////////////////////////////////
+
+            .route("exchangeService", r -> r
+                .path("/ws/market")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/ws/market", "/ws/update")
+                  //  .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
+            .route("exchangeService", r -> r
+                .path("/app/subscribe")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/app/subscribe", "/app/subscribe")
+                 //   .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://exchangeService")
             )

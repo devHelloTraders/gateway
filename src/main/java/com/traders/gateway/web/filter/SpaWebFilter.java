@@ -18,6 +18,8 @@ public class SpaWebFilter implements WebFilter {
             !path.startsWith("/management") &&
             !path.startsWith("/v3/api-docs") &&
             !path.startsWith("/services") &&
+                !path.contains("/ws") &&
+                !path.contains("/topic") &&
             !path.contains(".") &&
             path.matches("/(.*)")
         ) {
