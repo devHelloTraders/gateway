@@ -172,6 +172,16 @@ public class GatewayConfig {
                 )
                 .uri("lb://portfolioservice")
             )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/transactions/add")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/add", "/api/transactions/add")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
     //////////////////////////////////////////////////////////////////////////////////
             .route("exchangeService", r -> r
                 .path("/api/exchange/renew")
@@ -283,6 +293,118 @@ public class GatewayConfig {
                  //   .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://exchangeService")
+            )
+
+            ////////////////////////////////////////////////
+            .route("admin-service", r -> r
+                .path("/api/admin/register")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                        .rewritePath("/api/admin/register", "/api/admin/user/register")
+                        .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/activate-user")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/activate-user", "/api/admin/user/activate")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/deactivate-user")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/deactivate-user", "/api/admin/user/deactivate")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/default-conf/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/default-conf/(?<authority>.*)", "/api/admin/config/default/${authority}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/conf/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/conf/(?<userId>.*)", "/api/admin/config/get/${userId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/deposit-request")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/deposit-request", "/api/admin/deposit-requests/")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/deposit-request/approve")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/deposit-request/approve", "/api/admin/deposit-requests/approve")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/deposit-request/reject")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/deposit-request/reject", "/api/admin/deposit-request/reject")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/withdraw-requests")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/withdraw-requests", "/api/admin/withdraw-requests/")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/withdraw-request/approve")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/withdraw-request/approve", "/api/admin/withdraw-requests/approve")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/withdraw-request/reject")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/withdraw-request/reject", "/api/admin/withdraw-requests/reject")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
             )
             .build();
     }
