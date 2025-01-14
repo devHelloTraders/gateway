@@ -196,6 +196,17 @@ public class GatewayConfig {
             )
 
             .route("exchangeService", r -> r
+                .path("/api/exchange/restart")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/exchange/restart", "/api/admin/renewWebSocket")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
+            .route("exchangeService", r -> r
                 .path("/api/exchange/stop")
                 .and()
                 .method("GET")
