@@ -99,11 +99,11 @@ public class GatewayConfig {
             .uri("lb://portfolioservice")
         )
             .route("portfolioservice", r -> r
-                .path("/api/portfolio/transactions/add")
+                .path("/api/portfolio/transactions/addTxn")
                 .and()
                 .method("POST")
                 .filters(f -> f
-                    .rewritePath("/api/portfolio/transactions/add", "/api/transactions/add")
+                    .rewritePath("/api/portfolio/transactions/addTxn", "/api/transactions/add")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://portfolioservice")
@@ -295,6 +295,18 @@ public class GatewayConfig {
                 )
                 .uri("lb://exchangeService")
             )
+
+            .route("exchangeService", r -> r
+                .path("/api/portfolio/transactions/add")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/add", "/api/exchange/trade/add")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
 
             ////////////////////////////////////////////////
             .route("admin-service", r -> r
