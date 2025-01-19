@@ -396,9 +396,9 @@ public class GatewayConfig {
             .route("admin-service", r -> r
                 .path("/api/admin/deposit-request/reject")
                 .and()
-                .method("GET")
+                .method("PUT")
                 .filters(f -> f
-                    .rewritePath("/api/admin/deposit-request/reject", "/api/admin/deposit-request/reject")
+                    .rewritePath("/api/admin/deposit-request/reject", "/api/admin/deposit-requests/reject")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
