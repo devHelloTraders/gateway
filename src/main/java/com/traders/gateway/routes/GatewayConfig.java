@@ -59,9 +59,6 @@ public class GatewayConfig {
                 )
                 .uri("lb://portfolioservice")
             )
-
-
-
             .route("portfolioservice", r -> r
                 .path("/api/admin/portfolio")
                 .and()
@@ -72,7 +69,26 @@ public class GatewayConfig {
                 )
                 .uri("lb://portfolioservice")
             )
-
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/add-deposit-request")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/add-deposit-request", "/api/wallet/add-deposit-request")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/add-withdraw-request")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/add-withdraw-request", "/api/wallet/add-withdraw-request")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
 
 
 ///////////////////////////////////////////
@@ -82,8 +98,6 @@ public class GatewayConfig {
                 .method("GET")
                 .filters(f -> f
                     .rewritePath("/api/portfolio/transactions", "/api/transactions")
-
-
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://portfolioservice")
