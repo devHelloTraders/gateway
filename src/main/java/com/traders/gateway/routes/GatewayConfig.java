@@ -463,6 +463,16 @@ public class GatewayConfig {
                 )
                 .uri("lb://admin-service")
             )
+            .route("admin-service", r -> r
+                .path("/api/auth/trading-client/conf")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/auth/trading-client/conf", "/api/conf/getconf")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
             .build();
     }
 }
