@@ -37,6 +37,17 @@ public class GatewayConfig {
                 )
                 .uri("lb://authService")
             )
+
+            .route("authService", r -> r
+                .path("/api/auth/change-password")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/auth/change-password", "/api/account/change-password")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://authService")
+            )
 ////////////////////////////////////////////
             .route("portfolioservice", r -> r
                 .path("/api/portfolio/get")
@@ -182,6 +193,26 @@ public class GatewayConfig {
                 .method("POST")
                 .filters(f -> f
                     .rewritePath("/api/portfolio/watchlist/update", "/api/watchlist/update")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/wallet/deposit-requests")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/wallet/deposit-requests", "/api/wallet/deposit-requests")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/wallet/withdraw-requests")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/wallet/withdraw-requests", "/api/wallet/withdraw-requests")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://portfolioservice")
