@@ -514,6 +514,86 @@ public class GatewayConfig {
                 )
                 .uri("lb://admin-service")
             )
+            .route("admin-service", r -> r
+                .path("/api/client/bank-account")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/client/bank-account", "/api/admin/bank-account/get")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/bank-account/get")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/bank-account/get", "/api/admin/bank-account/get")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/bank-account/update")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/bank-account/update", "/api/admin/bank-account/updateBankAccount")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/scrip/deactivate")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/scrip/deactivate", "/api/admin/marketwatch/deactive-scrip")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/scrip/activate")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/scrip/activate", "/api/admin/marketwatch/activate-scrip")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/activetrades")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/activetrades", "/api/admin/marketwatch/activetrades")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/activetrades/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/activetrades/(?<scripId>.*)", "/api/admin/marketwatch/activetrades/${scripId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/closedtrades")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/closedtrades", "/api/admin/marketwatch/closedtrades")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
             .build();
     }
 }
