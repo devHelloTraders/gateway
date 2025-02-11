@@ -565,21 +565,41 @@ public class GatewayConfig {
                 .uri("lb://admin-service")
             )
             .route("admin-service", r -> r
-                .path("/api/admin/activetrades")
+                .path("/api/admin/activepositions")
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/admin/activetrades", "/api/admin/marketwatch/activetrades")
+                    .rewritePath("/api/admin/activepositions", "/api/admin/marketwatch/activepositions")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
             )
             .route("admin-service", r -> r
-                .path("/api/admin/activetrades/**")
+                .path("/api/admin/activepositions/**")
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/admin/activetrades/(?<scripId>.*)", "/api/admin/marketwatch/activetrades/${scripId}")
+                    .rewritePath("/api/admin/activepositions/(?<scripId>.*)", "/api/admin/marketwatch/activepositions/${scripId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/closedpositions")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/closedpositions", "/api/admin/marketwatch/closedpositions")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/alltrades")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/alltrades", "/api/admin/trades-report/alltrades")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
@@ -589,7 +609,17 @@ public class GatewayConfig {
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/admin/closedtrades", "/api/admin/marketwatch/closedtrades")
+                    .rewritePath("/api/admin/closedtrades", "/api/admin/trades-report/closedtrades")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/pendingtrades")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/pendingtrades", "/api/admin/trades-report/pendingtrades")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
