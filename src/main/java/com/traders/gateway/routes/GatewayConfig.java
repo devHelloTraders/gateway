@@ -145,6 +145,66 @@ public class GatewayConfig {
                 )
                 .uri("lb://portfolioservice")
             )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/transactions/pending")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/pending", "/api/transactions/pending")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/admin/transactions/pending/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/transactions/pending/(?<userId>.*)", "/api/transactions/pending/${userId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/transactions/closed")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/closed", "/api/transactions/closed")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/admin/transactions/closed/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/transactions/closed/(?<userId>.*)", "/api/transactions/closed/${userId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/transactions/active")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/active", "/api/transactions/active")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/admin/transactions/active/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/transactions/active/(?<userId>.*)", "/api/transactions/active/${userId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
 //////////////////////////////////////////////////
 
             .route("portfolioservice", r -> r
