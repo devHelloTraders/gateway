@@ -146,6 +146,26 @@ public class GatewayConfig {
                 .uri("lb://portfolioservice")
             )
             .route("portfolioservice", r -> r
+                .path("/api/portfolio/transactions/update/cancel")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/update/cancel", "/api/transactions/update/cancel")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/transactions/update/pending-order")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/update/pending-order", "/api/transactions/update/pending-order")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("portfolioservice", r -> r
                 .path("/api/portfolio/transactions/pending")
                 .and()
                 .method("GET")
