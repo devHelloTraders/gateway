@@ -455,6 +455,16 @@ public class GatewayConfig {
                 .uri("lb://admin-service")
             )
             .route("admin-service", r -> r
+                .path("/api/admin/user/update")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/user/update", "/api/admin/user/update")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
                 .path("/api/admin/activate-user")
                 .and()
                 .method("PUT")
@@ -580,6 +590,16 @@ public class GatewayConfig {
                 .method("GET")
                 .filters(f -> f
                     .rewritePath("/api/admin/trading-clients/(?<userId>.*)", "/api/admin/user/trading-clients/${userId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/user-details/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/user-details/(?<userId>.*)", "/api/admin/user/details/${userId}")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
