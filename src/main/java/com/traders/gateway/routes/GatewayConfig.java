@@ -225,6 +225,16 @@ public class GatewayConfig {
                 )
                 .uri("lb://portfolioservice")
             )
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/close-deal/**")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/close-deal/(?<transactionId>.*)", "/api/transactions/close-deal/${transactionId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
 //////////////////////////////////////////////////
 
             .route("portfolioservice", r -> r
