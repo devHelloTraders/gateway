@@ -427,6 +427,17 @@ public class GatewayConfig {
                 .uri("lb://exchangeService")
             )
 
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/machine/activePL")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/machine/activePL", "/api/machine/user/activePL")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+
             //////////////////////////////////////////////////////////////
 
             .route("exchangeService", r -> r
