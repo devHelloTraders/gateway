@@ -765,6 +765,16 @@ public class GatewayConfig {
                 )
                 .uri("lb://admin-service")
             )
+            .route("admin-service", r -> r
+                .path("/api/admin/wallet/new-fund")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/admin/wallet/new-fund", "/api/admin/wallet/add")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
             .build();
     }
 }
