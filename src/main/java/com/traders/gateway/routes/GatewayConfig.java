@@ -295,6 +295,16 @@ public class GatewayConfig {
                 )
                 .uri("lb://exchangeService")
             )
+            .route("exchangeService", r -> r
+                .path("/app/users")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                        .rewritePath("/app/users", "/app/users")
+                    //   .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
 
             .route("exchangeService", r -> r
                 .path("/api/portfolio/transactions/add")

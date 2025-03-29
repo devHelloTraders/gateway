@@ -18,14 +18,51 @@ logging:
     com.traders.gateway: Info
     org.springframework.cloud.gateway: error
     org.springframework.cloud.loadbalancer: error
+  file:
+    name: "/tmp/logs/app.log"
+    max-history: 5
+    max-size: 50MB
 
 management:
+  audit:
+    events:
+      enabled: true
 #  zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
 #    tracing:
 #      endpoint: http://localhost:9411/api/v2/spans
+  endpoint:
+    auditevents:
+      enabled: true
+    shutdown:
+      enabled: true
+    restart:
+      enabled: true
+    env:
+      show-values: ALWAYS
+      post:
+        enabled: true
+    configprops:
+      show-values: ALWAYS
+      post:
+        enabled: true
+      info:
+        env:
+          enabled: true
+  trace:
+    http:
+      enabled: true  # Enable HTTP tracing
+      include: request-headers,response-headers,errors,time-taken
   tracing:
     sampling:
       probability: 1.0 # report 100% of traces
+#uncomment for admin portal
+#spring:
+#  boot:
+#    admin:
+#      client:
+#        url: http://localhost:8090
+#        username: admin
+#        password: admin
 
 spring:
   devtools:

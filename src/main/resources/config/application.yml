@@ -33,24 +33,23 @@ reactive:
   #       connectTimeout: 5000
   #       readTimeout: 5000
 management:
+  audit:
+    events:
+      enabled: true
   endpoints:
     web:
       base-path: /management
       exposure:
-        include:
-          - configprops
-          - env
-          - gateway
-          - health
-          - info
-          - jhimetrics
-          - jhiopenapigroups
-          - logfile
-          - loggers
-          - prometheus
-          - threaddump
+        include: "*"
+
 
   endpoint:
+    auditevents:
+      enabled: true
+    shutdown:
+      enabled: true
+    restart:
+      enabled: true
     gateway:
       enabled: true
     health:
@@ -80,13 +79,6 @@ management:
       mode: full
     env:
       enabled: true
-  health:
-    disk:
-      enabled: false
-    defaults:
-      enabled: false
-    mail:
-      enabled: false # When using the MailService, configure an SMTP server and set this to true
   prometheus:
     metrics:
       export:
@@ -253,4 +245,5 @@ config:
     license-url:
   security:
     content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:"
+
 
