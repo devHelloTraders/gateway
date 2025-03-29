@@ -736,6 +736,16 @@ public class GatewayConfig {
                 .uri("lb://admin-service")
             )
             .route("admin-service", r -> r
+                .path("/api/admin/all-deleted-trades")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/all-deleted-trades", "/api/admin/trades-report/all-deleted-trades")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
                 .path("/api/admin/closedtrades")
                 .and()
                 .method("GET")
@@ -771,6 +781,36 @@ public class GatewayConfig {
                 .method("POST")
                 .filters(f -> f
                     .rewritePath("/api/admin/wallet/new-fund", "/api/admin/wallet/add")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("portfolioservice", r -> r
+                .path("/api/admin/transaction/delete-trade/**")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/transaction/delete-trade/(?<transactionId>.*)", "/api/transaction/delete-trade/${transactionId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+            .route("admin-service", r -> r
+                .path("/api/auth/settings/market")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/auth/settings/market", "/api/admin/settings/market")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/market-setting/update")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/market-setting/update", "/api/admin/settings/market-setting/update")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
