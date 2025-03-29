@@ -800,7 +800,7 @@ public class GatewayConfig {
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/auth/settings/market", "/api/admin/settings/market")
+                    .rewritePath("/api/auth/settings/market", "/api/auth/market-settings/get")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
@@ -810,7 +810,7 @@ public class GatewayConfig {
                 .and()
                 .method("PUT")
                 .filters(f -> f
-                    .rewritePath("/api/admin/market-setting/update", "/api/admin/settings/market-setting/update")
+                    .rewritePath("/api/admin/market-setting/update", "/api/admin/market-setting/update")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
