@@ -825,6 +825,46 @@ public class GatewayConfig {
                 )
                 .uri("lb://admin-service")
             )
+            .route("admin-service", r -> r
+                .path("/api/admin/holiday/add")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/admin/holiday/add", "/api/admin/holiday/add")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/holiday/get")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/holiday/get", "/api/admin/holiday/get")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/holiday/update")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/holiday/update", "/api/admin/holiday/update")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/holiday/delete/**")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/holiday/delete/(?<holidayId>.*)", "/api/admin/holiday/delete/${holidayId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
             .build();
     }
 }
