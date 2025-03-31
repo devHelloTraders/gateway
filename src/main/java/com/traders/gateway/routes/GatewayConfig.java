@@ -48,6 +48,24 @@ public class GatewayConfig {
                 )
                 .uri("lb://authService")
             )
+            .route("authService", r -> r
+                .path("/api/static/enquiry/add")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/static/enquiry/add", "/api/static/enquiry/add")
+                )
+                .uri("lb://authService")
+            )
+            .route("authService", r -> r
+                .path("/api/static/signup")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/static/signup", "/api/register")
+                )
+                .uri("lb://authService")
+            )
 ////////////////////////////////////////////
             .route("portfolioservice", r -> r
                 .path("/api/portfolio/get")
@@ -382,7 +400,16 @@ public class GatewayConfig {
                 )
                 .uri("lb://exchangeService")
             )
-
+            .route("exchangeService", r -> r
+                .path("/api/admin/manage-script/get")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/manage-script/get", "/api/stocks/manage-script/get")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
             .route("exchangeService", r -> r
                 .path("/api/exchange/search")
                 .and()
@@ -861,6 +888,16 @@ public class GatewayConfig {
                 .method("PUT")
                 .filters(f -> f
                     .rewritePath("/api/admin/holiday/delete/(?<holidayId>.*)", "/api/admin/holiday/delete/${holidayId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/enquiry/get")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/enquiry/get", "/api/admin/enquiry/get")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
