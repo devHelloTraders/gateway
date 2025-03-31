@@ -86,7 +86,7 @@ public class SecurityConfiguration {
                     .pathMatchers("/").permitAll()
                     .pathMatchers("/*.*").permitAll()
                     .pathMatchers("/ws/**").permitAll()
-                    .pathMatchers("/open/**").permitAll()
+                    .pathMatchers("/api/open/**").permitAll()
                     .pathMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
                     .pathMatchers("/api/exchange/machine/**").hasAuthority(AuthoritiesConstants.MACHINE)
                     .pathMatchers("/api/portfolio/machine/**").hasAuthority(AuthoritiesConstants.MACHINE)
