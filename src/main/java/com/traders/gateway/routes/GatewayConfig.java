@@ -49,11 +49,11 @@ public class GatewayConfig {
                 .uri("lb://authService")
             )
             .route("authService", r -> r
-                .path("/api/static/enquiry/add")
+                .path("/open/enquiry/add")
                 .and()
                 .method("POST")
                 .filters(f -> f
-                    .rewritePath("/api/static/enquiry/add", "/api/static/enquiry/add")
+                    .rewritePath("/open/enquiry/add", "/api/open/enquiry/add")
                 )
                 .uri("lb://authService")
             )
