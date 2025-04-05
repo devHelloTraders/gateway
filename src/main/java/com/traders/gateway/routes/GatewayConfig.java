@@ -78,6 +78,18 @@ public class GatewayConfig {
                 .uri("lb://portfolioservice")
             )
 
+
+            .route("portfolioservice", r -> r
+                .path("/api/admin/portfolio/portfolioData")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/portfolio/portfolioData", "/api/portfolioData")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+
             .route("portfolioservice", r -> r
                 .path("/api/portfolio/gethistory")
                 .and()
@@ -454,6 +466,17 @@ public class GatewayConfig {
                 .uri("lb://exchangeService")
             )
 
+            .route("exchangeService", r -> r
+                .path("/api/exchange/machine/updateTxn")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/exchange/machine/updateTxn", "/api/exchange/trade/machine/updateTxn")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
             .route("portfolioservice", r -> r
                 .path("/api/portfolio/machine/activePL")
                 .and()
@@ -494,6 +517,29 @@ public class GatewayConfig {
                 .method("GET")
                 .filters(f -> f
                         .rewritePath("/app/users", "/app/users")
+                    //   .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
+
+            .route("exchangeService", r -> r
+                .path("/app/brokerdata")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                        .rewritePath("/app/brokerData", "/app/brokerData")
+                    //   .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
+            .route("exchangeService", r -> r
+                .path("/app/clientData")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                        .rewritePath("/app/clientData", "/app/clientData")
                     //   .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://exchangeService")
