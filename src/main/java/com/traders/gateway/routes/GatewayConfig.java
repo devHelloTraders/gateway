@@ -902,6 +902,16 @@ public class GatewayConfig {
                 )
                 .uri("lb://admin-service")
             )
+            .route("admin-service", r -> r
+                .path("/api/admin/action-log/get")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/action-log/get", "/api/admin/action-log/get")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
             .build();
     }
 }
