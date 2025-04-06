@@ -49,6 +49,16 @@ public class GatewayConfig {
                 .uri("lb://authService")
             )
             .route("authService", r -> r
+                .path("/api/auth/change-transaction-password")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/auth/change-transaction-password", "/api/account/change-transaction-password")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://authService")
+            )
+            .route("authService", r -> r
                 .path("/api/open/enquiry/add")
                 .and()
                 .method("POST")
@@ -954,6 +964,16 @@ public class GatewayConfig {
                 .method("GET")
                 .filters(f -> f
                     .rewritePath("/api/admin/action-log/get", "/api/admin/action-log/get")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/dashboard/grid")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/dashboard/grid", "/api/admin/dashboard/grid/get")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
