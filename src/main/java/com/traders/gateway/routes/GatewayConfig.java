@@ -739,6 +739,16 @@ public class GatewayConfig {
                 .uri("lb://admin-service")
             )
             .route("admin-service", r -> r
+                .path("/api/auth/trading-client/conf/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/auth/trading-client/conf/(?<userId>.*)", "/api/conf/getconf/${userId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
                 .path("/api/client/bank-account")
                 .and()
                 .method("GET")
