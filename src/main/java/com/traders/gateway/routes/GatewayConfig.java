@@ -174,6 +174,17 @@ public class GatewayConfig {
                 .uri("lb://portfolioservice")
             )
 
+            .route("portfolioservice", r -> r
+                .path("/api/portfolio/transactions/addTxn/**")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/portfolio/transactions/addTxn/(?<userId>.*)", "/api/transactions/add/${userId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://portfolioservice")
+            )
+
 
             .route("portfolioservice", r -> r
                 .path("/api/portfolio/transactions/update")
@@ -561,6 +572,17 @@ public class GatewayConfig {
                 .method("POST")
                 .filters(f -> f
                     .rewritePath("/api/portfolio/transactions/add", "/api/exchange/trade/add")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://exchangeService")
+            )
+
+            .route("exchangeService", r -> r
+                .path("/api/admin/transactions/add/**")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/admin/transactions/add/(?<userId>.*)", "/api/exchange/trade/add/${userId}")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://exchangeService")
