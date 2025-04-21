@@ -1010,6 +1010,18 @@ public class GatewayConfig {
                 )
                 .uri("lb://admin-service")
             )
+
+            ///////////////// NOTIFICATION Service
+            .route("notification-service", r -> r
+                .path("/api/admin/notification/send")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/admin/notification/send", "/api/notification/push/send-notification")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://notification-service")
+            )
             .build();
     }
 }
