@@ -76,6 +76,15 @@ public class GatewayConfig {
                 )
                 .uri("lb://authService")
             )
+            .route("authService", r -> r
+                .path("/api/auth/account-info")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/auth/account-info", "/api/account")
+                )
+                .uri("lb://authService")
+            )
 ////////////////////////////////////////////
             .route("portfolioservice", r -> r
                 .path("/api/portfolio/get")
@@ -775,7 +784,7 @@ public class GatewayConfig {
                 .and()
                 .method("GET")
                 .filters(f -> f
-                    .rewritePath("/api/client/bank-account", "/api/admin/bank-account/get")
+                    .rewritePath("/api/client/bank-account", "/api/client/bank-account/get")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
