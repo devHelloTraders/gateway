@@ -537,6 +537,17 @@ public class GatewayConfig {
                 )
                 .uri("lb://portfolioservice")
             )
+            .route("admin-service", r -> r
+                .path("/api/admin/account-report")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/account-report", "/api/admin/account-report/get")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+
 
             //////////////////////////////////////////////////////////////
 
