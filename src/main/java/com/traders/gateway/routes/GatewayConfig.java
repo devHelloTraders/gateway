@@ -547,8 +547,26 @@ public class GatewayConfig {
                 )
                 .uri("lb://admin-service")
             )
-
-
+            .route("admin-service", r -> r
+                .path("/api/admin/auto-script-config/get")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/auto-script-config/get", "/api/admin/auto-script-config/get")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/auto-script-config/update")
+                .and()
+                .method("PUT")
+                .filters(f -> f
+                    .rewritePath("/api/admin/auto-script-config/update", "/api/admin/auto-script-config/update")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
             //////////////////////////////////////////////////////////////
 
             .route("exchangeService", r -> r
