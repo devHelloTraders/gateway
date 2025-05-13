@@ -909,6 +909,16 @@ public class GatewayConfig {
                 .uri("lb://admin-service")
             )
             .route("admin-service", r -> r
+                .path("/api/admin/closedpositions/**")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/closedpositions/(?<scripId>.*)", "/api/admin/marketwatch/closedpositions/${scripId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
                 .path("/api/admin/alltrades")
                 .and()
                 .method("GET")
