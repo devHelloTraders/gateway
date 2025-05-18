@@ -1105,7 +1105,27 @@ public class GatewayConfig {
                 .and()
                 .method("POST")
                 .filters(f -> f
-                    .rewritePath("/api/admin/notification/send", "/api/notification/push/send-notification")
+                    .rewritePath("/api/admin/notification/send", "/api/notification/push/send-notifications-to-all")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://notification-service")
+            )
+            .route("notification-service", r -> r
+                .path("/api/notification/machine/send")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/notification/machine/send", "/api/notification/push/send-notification")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://notification-service")
+            )
+            .route("notification-service", r -> r
+                .path("/api/admin/notification/get-all")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/notification/get-all", "/api/notification/push/get-all")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://notification-service")

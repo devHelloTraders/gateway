@@ -98,6 +98,7 @@ public class SecurityConfiguration {
                     .pathMatchers("/api/admin/brokers").hasAuthority(AuthoritiesConstants.BROKER)
                     .pathMatchers("/api/exchange/machine/**").hasAuthority(AuthoritiesConstants.MACHINE)
                     .pathMatchers("/api/portfolio/machine/**").hasAuthority(AuthoritiesConstants.MACHINE)
+                    .pathMatchers("/api/notification/machine/**").hasAuthority(AuthoritiesConstants.MACHINE)
                     .pathMatchers("/api/auth/**").permitAll()
                     .pathMatchers("/api/auth/secure/**").authenticated()
                     .pathMatchers("/api/portfolio/**").authenticated()
