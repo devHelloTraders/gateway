@@ -123,6 +123,8 @@ spring:
         watch:
           enabled: false
     gateway:
+      forwarded:
+        enabled: true
       default-filters:
         - JWTRelay
       discovery:
