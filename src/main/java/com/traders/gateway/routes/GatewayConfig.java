@@ -85,6 +85,15 @@ public class GatewayConfig {
                 )
                 .uri("lb://authService")
             )
+            .route("authService", r -> r
+                .path("/api/client/authenticate")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/client/authenticate", "/api/client/authenticate")
+                )
+                .uri("lb://authService")
+            )
 ////////////////////////////////////////////
             .route("portfolioservice", r -> r
                 .path("/api/portfolio/get")
