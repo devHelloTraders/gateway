@@ -33,7 +33,7 @@ public class JWTRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<O
                 String token = this.extractToken(bearerToken);
                 return jwtConfiguration.getReactiveJwtDecoderInstance().decode(token)
                     .flatMap(jwt ->{
-                        var isAdmin = jwt.getClaim("auth").equals("ROLE_ADMIN");
+                        var isAdmin = jwt.getClaimAsString("auth").contains("ROLE_ADMIN");
                        return chain.filter(withBearerAuth(exchange, token, jwt.getClaimAsString("userId"),jwt.getClaim("creationTimeStamp"),isAdmin));
                     } );
             }
