@@ -91,6 +91,17 @@ public class GatewayConfig {
                 .method("POST")
                 .filters(f -> f
                     .rewritePath("/api/client/authenticate", "/api/client/authenticate")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://authService")
+            )
+            .route("authService", r -> r
+                .path("/api/admin/brokers/auth/transaction-password")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/admin/brokers/auth/transaction-password", "/api/authenticate/transaction-password")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://authService")
             )
@@ -1123,6 +1134,26 @@ public class GatewayConfig {
                 .method("GET")
                 .filters(f -> f
                     .rewritePath("/api/admin/dashboard/m2m/broker-detail/(?<userId>.*)", "/api/admin/dashboard/m2m/broker-detail/${userId}")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/broker-fund/add")
+                .and()
+                .method("POST")
+                .filters(f -> f
+                    .rewritePath("/api/admin/broker-fund/add", "/api/admin/broker-fund/add")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/broker-fund/get")
+                .and()
+                .method("GET")
+                .filters(f -> f
+                    .rewritePath("/api/admin/broker-fund/get", "/api/admin/broker-fund/get")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
