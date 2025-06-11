@@ -32,7 +32,10 @@ public class JWTRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<O
             if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
                 String token = this.extractToken(bearerToken);
                 return jwtConfiguration.getReactiveJwtDecoderInstance().decode(token)
-                    .flatMap(jwt -> chain.filter(withBearerAuth(exchange, token, jwt.getClaimAsString("userId"),jwt.getClaim("creationTimeStamp"))));
+                    .flatMap(jwt ->{
+                        var isAdmin = jwt.getClaim("auth").equals("ROLE_ADMIN");
+                       return chain.filter(withBearerAuth(exchange, token, jwt.getClaimAsString("userId"),jwt.getClaim("creationTimeStamp"),isAdmin));
+                    } );
             }
 
             return chain.filter(exchange); // Proceed without the token if it's not present
@@ -46,10 +49,10 @@ public class JWTRelayGatewayFilterFactory extends AbstractGatewayFilterFactory<O
         throw new IllegalArgumentException("Invalid token in Authorization header");
     }
 
-    private ServerWebExchange withBearerAuth(ServerWebExchange exchange, String authorizeToken, String userId, Object creationStamp) {
+    private ServerWebExchange withBearerAuth(ServerWebExchange exchange, String authorizeToken, String userId, Object creationStamp,boolean isAdmin) {
         Optional<Long> tokenDetails = Optional.ofNullable(redisService.getCustomCacheValue("tokenManager", userId));
 
-        if (creationStamp instanceof Long creationTime && tokenDetails.orElse(Long.MIN_VALUE) <= creationTime) {
+        if (isAdmin ||creationStamp instanceof Long creationTime && tokenDetails.orElse(Long.MIN_VALUE) <= creationTime) {
             redisService.saveToCustomCacheWithTTL("ActiveUsersCache", userId, userId, 3, TimeUnit.MINUTES);
 
             return exchange.mutate().request(r -> r.headers(headers -> {
