@@ -779,6 +779,16 @@ public class GatewayConfig {
                 .uri("lb://admin-service")
             )
             .route("admin-service", r -> r
+                .path("/api/admin/deposit-request/remove")
+                .and()
+                .method("DELETE")
+                .filters(f -> f
+                    .rewritePath("/api/admin/deposit-request/remove", "/api/admin/deposit-requests/remove")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
                 .path("/api/admin/withdraw-requests")
                 .and()
                 .method("GET")
@@ -804,6 +814,16 @@ public class GatewayConfig {
                 .method("PUT")
                 .filters(f -> f
                     .rewritePath("/api/admin/withdraw-request/reject", "/api/admin/withdraw-requests/reject")
+                    .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
+                )
+                .uri("lb://admin-service")
+            )
+            .route("admin-service", r -> r
+                .path("/api/admin/withdraw-request/remove")
+                .and()
+                .method("DELETE")
+                .filters(f -> f
+                    .rewritePath("/api/admin/withdraw-request/remove", "/api/admin/withdraw-requests/remove")
                     .filter(jwtRelayGatewayFilterFactory.apply(new Object()))
                 )
                 .uri("lb://admin-service")
